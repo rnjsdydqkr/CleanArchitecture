@@ -33,6 +33,7 @@
 		98B652082FE00EC700321B94 /* UserListUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B652072FE00EBE00321B94 /* UserListUsecase.swift */; };
 		98B6520A2FE0128200321B94 /* UserRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B652092FE0127A00321B94 /* UserRepositoryProtocol.swift */; };
 		98C869DB2FE261C700BA97A8 /* MockUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C869D92FE261C700BA97A8 /* MockUserRepository.swift */; };
+		98C869E12FE2699C00BA97A8 /* UserListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C869E02FE2699C00BA97A8 /* UserListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		98B652072FE00EBE00321B94 /* UserListUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListUsecase.swift; sourceTree = "<group>"; };
 		98B652092FE0127A00321B94 /* UserRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryProtocol.swift; sourceTree = "<group>"; };
 		98C869D92FE261C700BA97A8 /* MockUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserRepository.swift; sourceTree = "<group>"; };
+		98C869E02FE2699C00BA97A8 /* UserListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 				98B651E22FE0096700321B94 /* AppDelegate.swift */,
 				98B651E92FE0096700321B94 /* SceneDelegate.swift */,
 				98B651EB2FE0096700321B94 /* ViewController.swift */,
+				98C869DF2FE2698D00BA97A8 /* Presentation */,
 				981352652FE0D3850016840D /* Data */,
 				98B651FE2FE009AD00321B94 /* Domain */,
 				98B651E82FE0096700321B94 /* Main.storyboard */,
@@ -243,6 +246,22 @@
 				98C869D92FE261C700BA97A8 /* MockUserRepository.swift */,
 			);
 			path = Mock;
+			sourceTree = "<group>";
+		};
+		98C869DE2FE2698D00BA97A8 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				98C869E02FE2699C00BA97A8 /* UserListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		98C869DF2FE2698D00BA97A8 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				98C869DE2FE2698D00BA97A8 /* ViewModel */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -398,6 +417,7 @@
 				98B651EE2FE0096700321B94 /* AppDelegate.swift in Sources */,
 				98B651EF2FE0096700321B94 /* SceneDelegate.swift in Sources */,
 				98AD82CE2FE10C8600599E02 /* NetworkManager.swift in Sources */,
+				98C869E12FE2699C00BA97A8 /* UserListViewModel.swift in Sources */,
 				98B651F02FE0096700321B94 /* study.xcdatamodeld in Sources */,
 				9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */,
 				98B652042FE00C3A00321B94 /* NetworkError.swift in Sources */,
