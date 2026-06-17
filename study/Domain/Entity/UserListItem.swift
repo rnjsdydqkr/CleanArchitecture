@@ -26,7 +26,7 @@ public struct UserListResult: Decodable {
   }
 }
 
-public struct UserListItem: Decodable {
+public struct UserListItem: Decodable, Hashable {
   let id: Int
   let login: String
   let imageURL: String
