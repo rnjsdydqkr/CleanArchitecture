@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		981352682FE0D3A10016840D /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352672FE0D39E0016840D /* UserSession.swift */; };
-		9813526A2FE0D3AE0016840D /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352692FE0D3A40016840D /* CoreData.swift */; };
+		9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352692FE0D3A40016840D /* UserCoreData.swift */; };
 		9813526F2FE0D4170016840D /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9813526E2FE0D4130016840D /* Repository.swift */; };
 		98AD82C12FE1032700599E02 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82C02FE1032700599E02 /* SnapKit */; };
 		98AD82C42FE1035700599E02 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82C32FE1035700599E02 /* RxCocoa */; };
@@ -16,6 +16,7 @@
 		98AD82C92FE1067300599E02 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82C82FE1067300599E02 /* Kingfisher */; };
 		98AD82CC2FE1068600599E02 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82CB2FE1068600599E02 /* Alamofire */; };
 		98AD82CE2FE10C8600599E02 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD82CD2FE10C8000599E02 /* NetworkManager.swift */; };
+		98AD82D12FE1472000599E02 /* UserNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AD82D02FE1472000599E02 /* UserNetwork.swift */; };
 		98B651EE2FE0096700321B94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B651E22FE0096700321B94 /* AppDelegate.swift */; };
 		98B651EF2FE0096700321B94 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B651E92FE0096700321B94 /* SceneDelegate.swift */; };
 		98B651F02FE0096700321B94 /* study.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98B651EA2FE0096700321B94 /* study.xcdatamodeld */; };
@@ -52,9 +53,10 @@
 
 /* Begin PBXFileReference section */
 		981352672FE0D39E0016840D /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
-		981352692FE0D3A40016840D /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
+		981352692FE0D3A40016840D /* UserCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreData.swift; sourceTree = "<group>"; };
 		9813526E2FE0D4130016840D /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		98AD82CD2FE10C8000599E02 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		98AD82D02FE1472000599E02 /* UserNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetwork.swift; sourceTree = "<group>"; };
 		98B651AB2FE0093400321B94 /* study.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = study.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B651C42FE0093500321B94 /* studyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B651CE2FE0093500321B94 /* studyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = studyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +123,7 @@
 			children = (
 				981352672FE0D39E0016840D /* UserSession.swift */,
 				98AD82CD2FE10C8000599E02 /* NetworkManager.swift */,
+				98AD82D02FE1472000599E02 /* UserNetwork.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -128,7 +131,7 @@
 		9813526C2FE0D3BE0016840D /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				981352692FE0D3A40016840D /* CoreData.swift */,
+				981352692FE0D3A40016840D /* UserCoreData.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -385,10 +388,11 @@
 				98B651EF2FE0096700321B94 /* SceneDelegate.swift in Sources */,
 				98AD82CE2FE10C8600599E02 /* NetworkManager.swift in Sources */,
 				98B651F02FE0096700321B94 /* study.xcdatamodeld in Sources */,
-				9813526A2FE0D3AE0016840D /* CoreData.swift in Sources */,
+				9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */,
 				98B652042FE00C3A00321B94 /* NetworkError.swift in Sources */,
 				98B652082FE00EC700321B94 /* UserListUsecase.swift in Sources */,
 				98B651F12FE0096700321B94 /* ViewController.swift in Sources */,
+				98AD82D12FE1472000599E02 /* UserNetwork.swift in Sources */,
 				98B652022FE00A0C00321B94 /* UserListItem.swift in Sources */,
 				98B652062FE00DD000321B94 /* CoreDataError.swift in Sources */,
 				98B6520A2FE0128200321B94 /* UserRepositoryProtocol.swift in Sources */,

@@ -9,6 +9,7 @@ import Foundation
 
 public protocol UserListUsecaseProtocol {
   func fetchUser(query: String, page: Int) async -> Result<UserListResult, NetworkError> // 유저 리스트 불러오기 (원격)
+  
   func getFavoriteUsers() -> Result<[UserListItem], CoreDataError> // 전체 즐겨찾기 리스트 불러오기
   func saveFavorite(user: UserListItem) -> Result<Bool, CoreDataError>
   func deleteFavoriteUser(userId: Int) -> Result<Bool, CoreDataError>

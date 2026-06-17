@@ -13,7 +13,11 @@ import Alamofire
  NetworkManager(session: MockSession()) // 테스트단
  ***/
 
-public class NetworkManager {
+protocol NetworkManagerProtocol {
+  func fetchData<T: Decodable>(url: String, method: HTTPMethod, parameter: Parameters?, encoding: ParameterEncoding) async -> Result<T, NetworkError>
+}
+
+public class NetworkManager: NetworkManagerProtocol {
   private let session: SessionProtocol
   init(session: SessionProtocol) {
     self.session = session
