@@ -51,8 +51,15 @@ public final class UserListViewModel: UserListViewModelProtocol {
   // 하단 API명/ 즐겨찾기명
   
   public func transform(input: Input) -> Output {
-    input.query.bind { query in // 유저가 텍스트 필드에 입력
+    input.query.bind { [weak self] query in // 유저가 텍스트 필드에 입력
       //TODO: 상황에 맞춰서 user fetch and get favorite users
+      guard let isValidate = self?.validateQuery(query: query), isValidate else {
+        //FIXME: 빈 값일 경우 fetchUser는 처리 안해줘도 되나?
+        self?.getFavoriteUsers(query: "")
+        return
+      }
+      self?.fetchUser(query: query, page: 0)
+      self?.getFavoriteUsers(query: query)
     }.disposed(by: dispossBag)
     
     input.saveFavorite.bind { user in
@@ -77,11 +84,57 @@ public final class UserListViewModel: UserListViewModelProtocol {
     
   }
   
-//  private func fetchUser(query: String, page: Int) {
-//    Task {
-//      await usecase.fetchUser(query: query, page: page)
-//    }
-//  }
+  private func fetchUser(query: String, page: Int) {
+    guard let urlAllowedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+    Task {
+      let result = await usecase.fetchUser(query: query, page: page)
+      switch result {
+      case .success(let users):
+        if page == 0 {
+          // 첫번째 페이지
+          fetchUserList.onNext(users.items)
+        } else {
+          // 두번째 그이상 페이지
+          do {
+            fetchUserList.onNext(try fetchUserList.value() + users.items)
+          } catch {
+            self.error.accept(error.localizedDescription)
+          }
+        }
+      case .failure(let error):
+        self.error.accept(error.description)
+      }
+    }
+  }
+  
+  private func getFavoriteUsers(query: String) {
+    let result = usecase.getFavoriteUsers()
+    switch result {
+    case .success(let users):
+      if query.isEmpty {
+        // 전체 리스트
+        favoriteUserList.onNext(users)
+      } else {
+        // 검색했을 때 필터링
+        let filteredUsers = users.filter { user in
+          user.login.contains(query)
+        }
+        favoriteUserList.onNext(filteredUsers)
+      }
+      allFavoriteUserList.onNext(users)
+    case .failure(let error):
+      self.error.accept(error.description)
+    }
+  }
+  
+  private func validateQuery(query: String) -> Bool {
+    if query.isEmpty {
+      return false
+    } else {
+      return true
+    }
+  }
+  
 }
 
 public enum TabButtonType {
