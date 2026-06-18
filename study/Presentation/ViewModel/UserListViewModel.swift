@@ -62,12 +62,20 @@ public final class UserListViewModel: UserListViewModelProtocol {
       self?.getFavoriteUsers(query: query)
     }.disposed(by: dispossBag)
     
-    input.saveFavorite.bind { user in
+    input.saveFavorite
+      .withLatestFrom(input.query, resultSelector: { users, query in
+        return (users, query)
+      })
+      .bind { [weak self] user, query in
       //TODO: 즐겨찾기 추가
+      self?.saveFavoriteUser(user: user, query: query)
     }.disposed(by: dispossBag)
     
-    input.deleteFavorite.bind { userId in
+    input.deleteFavorite
+      .withLatestFrom(input.query, resultSelector: { ($0, $1) })
+      .bind { [weak self] userId, query in
       //TODO: 즐겨찾기 삭제
+        self?.deleteFavoriteUser(userId: userId, query: query)
     }.disposed(by: dispossBag)
     
     input.fetchMore.bind {
@@ -122,6 +130,26 @@ public final class UserListViewModel: UserListViewModelProtocol {
         favoriteUserList.onNext(filteredUsers)
       }
       allFavoriteUserList.onNext(users)
+    case .failure(let error):
+      self.error.accept(error.description)
+    }
+  }
+  
+  private func saveFavoriteUser(user: UserListItem, query: String) {
+    let result = usecase.saveFavorite(user: user)
+    switch result {
+    case .success:
+      getFavoriteUsers(query: query)
+    case .failure(let error):
+      self.error.accept(error.description)
+    }
+  }
+  
+  private func deleteFavoriteUser(userId: Int, query: String) {
+    let result = usecase.deleteFavoriteUser(userId: userId)
+    switch result {
+    case .success:
+      getFavoriteUsers(query: query)
     case .failure(let error):
       self.error.accept(error.description)
     }
