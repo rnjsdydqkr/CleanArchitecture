@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 protocol UserListViewModelProtocol {
-  
+  func transform(input: UserListViewModel.Input) -> UserListViewModel.Output
 }
 
 /***
