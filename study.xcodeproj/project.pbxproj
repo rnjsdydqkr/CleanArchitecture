@@ -10,6 +10,8 @@
 		981352682FE0D3A10016840D /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352672FE0D39E0016840D /* UserSession.swift */; };
 		9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352692FE0D3A40016840D /* UserCoreData.swift */; };
 		9813526F2FE0D4170016840D /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9813526E2FE0D4130016840D /* UserRepository.swift */; };
+		987929092FE8C90D0079B066 /* TabButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987929082FE8C90D0079B066 /* TabButtonStackView.swift */; };
+		9879290B2FE8C97A0079B066 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9879290A2FE8C97A0079B066 /* UserTableViewCell.swift */; };
 		9880658D2FE3C6030070E3EA /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9880658C2FE3C6030070E3EA /* UserListViewController.swift */; };
 		98AD82C12FE1032700599E02 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82C02FE1032700599E02 /* SnapKit */; };
 		98AD82C42FE1035700599E02 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 98AD82C32FE1035700599E02 /* RxCocoa */; };
@@ -56,6 +58,8 @@
 		981352672FE0D39E0016840D /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		981352692FE0D3A40016840D /* UserCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreData.swift; sourceTree = "<group>"; };
 		9813526E2FE0D4130016840D /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
+		987929082FE8C90D0079B066 /* TabButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButtonStackView.swift; sourceTree = "<group>"; };
+		9879290A2FE8C97A0079B066 /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		9880658C2FE3C6030070E3EA /* UserListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
 		98AD82CD2FE10C8000599E02 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		98AD82D02FE1472000599E02 /* UserNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetwork.swift; sourceTree = "<group>"; };
@@ -144,6 +148,15 @@
 				9813526E2FE0D4130016840D /* UserRepository.swift */,
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		987929052FE8C88A0079B066 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				987929082FE8C90D0079B066 /* TabButtonStackView.swift */,
+				9879290A2FE8C97A0079B066 /* UserTableViewCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		9880658B2FE3C5BF0070E3EA /* ViewControllers */ = {
@@ -263,6 +276,7 @@
 		98C869DF2FE2698D00BA97A8 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				987929052FE8C88A0079B066 /* View */,
 				9880658B2FE3C5BF0070E3EA /* ViewControllers */,
 				98C869DE2FE2698D00BA97A8 /* ViewModel */,
 			);
@@ -426,7 +440,9 @@
 				9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */,
 				98B652042FE00C3A00321B94 /* NetworkError.swift in Sources */,
 				98B652082FE00EC700321B94 /* UserListUsecase.swift in Sources */,
+				9879290B2FE8C97A0079B066 /* UserTableViewCell.swift in Sources */,
 				98B651F12FE0096700321B94 /* ViewController.swift in Sources */,
+				987929092FE8C90D0079B066 /* TabButtonStackView.swift in Sources */,
 				98AD82D12FE1472000599E02 /* UserNetwork.swift in Sources */,
 				98B652022FE00A0C00321B94 /* UserListItem.swift in Sources */,
 				98B652062FE00DD000321B94 /* CoreDataError.swift in Sources */,
