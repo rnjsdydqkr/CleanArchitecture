@@ -13,6 +13,10 @@ public struct MockUserRepository: UserRepositoryProtocol {
     .failure(.dataNil)
   }
   
+  public func fetchUser2(query: String, page: Int) async -> Result<study.UserListResult, study.NetworkError> {
+    .failure(.dataNil)
+  }
+  
   public func getFavoriteUsers() -> Result<[study.UserListItem], study.CoreDataError> {
     .failure(.entityNotFound(""))
   }

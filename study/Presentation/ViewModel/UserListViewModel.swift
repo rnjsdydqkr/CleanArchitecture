@@ -124,7 +124,7 @@ public final class UserListViewModel: UserListViewModelProtocol {
   private func fetchUser(query: String, page: Int) {
     guard let urlAllowedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
     Task {
-      let result = await usecase.fetchUser(query: urlAllowedQuery, page: page)
+      let result = await usecase.fetchUser2(query: urlAllowedQuery, page: page)
       switch result {
       case .success(let users):
         if page == 0 {

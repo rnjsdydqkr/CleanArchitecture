@@ -45,6 +45,7 @@ class UserListViewController: UIViewController {
     view.backgroundColor = .white
     setUI()
     bindView()
+    bindViewModel()
   }
   
   private func bindViewModel() {
