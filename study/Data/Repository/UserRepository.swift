@@ -17,10 +17,6 @@ public struct UserRepository: UserRepositoryProtocol {
     await network.fetchUser(query: query, page: page)
   }
   
-  public func fetchUser2(query: String, page: Int) async -> Result<UserListResult, NetworkError> {
-    await network.fetchUser2(query: query, page: page)
-  }
-  
   public func getFavoriteUsers() -> Result<[UserListItem], CoreDataError> {
     coreData.getFavoriteUsers()
   }

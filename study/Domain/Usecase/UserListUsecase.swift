@@ -9,8 +9,6 @@ import Foundation
 
 public protocol UserListUsecaseProtocol {
   func fetchUser(query: String, page: Int) async -> Result<UserListResult, NetworkError> // 유저 리스트 불러오기 (원격)
-  func fetchUser2(query: String, page: Int) async -> Result<UserListResult, NetworkError>
-  
   func getFavoriteUsers() -> Result<[UserListItem], CoreDataError> // 전체 즐겨찾기 리스트 불러오기
   func saveFavorite(user: UserListItem) -> Result<Bool, CoreDataError>
   func deleteFavoriteUser(userId: Int) -> Result<Bool, CoreDataError>
@@ -28,10 +26,6 @@ public struct UserListUsecase: UserListUsecaseProtocol {
   
   public func fetchUser(query: String, page: Int) async -> Result<UserListResult, NetworkError> {
     await repository.fetchUser(query: query, page: page)
-  }
-  
-  public func fetchUser2(query: String, page: Int) async -> Result<UserListResult, NetworkError> {
-    await repository.fetchUser2(query: query, page: page)
   }
   
   public func getFavoriteUsers() -> Result<[UserListItem], CoreDataError> {

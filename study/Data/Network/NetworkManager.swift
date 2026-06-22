@@ -15,7 +15,7 @@ import Alamofire
 
 protocol NetworkManagerProtocol {
   func fetchData<T: Decodable>(url: String, method: HTTPMethod, parameter: Parameters?, encoding: ParameterEncoding) async -> Result<T, NetworkError>
-  func fetchData2<T: Decodable>(api: APIProtocol) async -> Result<T, NetworkError>
+  func fetchDataList<T: Decodable>(api: APIProtocol) async -> Result<T, NetworkError>
 }
 
 public class NetworkManager: NetworkManagerProtocol {
@@ -55,14 +55,16 @@ public class NetworkManager: NetworkManagerProtocol {
     
   }
   
-  func fetchData2<T: Decodable>(api: APIProtocol) async -> Result<T, NetworkError> {
+  func fetchDataList<T: Decodable>(api: APIProtocol) async -> Result<T, NetworkError> {
     
     let (fullURL, header, parameter, method, encoding) = makeURL(apiRouter: api)
     
     guard let fullURL else { return .failure(.urlError) }
     let result = await session.request(fullURL, method: method, parameters: parameter, encoding: encoding, headers: header).serializingData().response
+    
     if let error = result.error { return .failure(.requestFailed(error.localizedDescription)) }
     guard let data = result.data else { return .failure(.dataNil) }
+    if let jsonString = String(data: data, encoding: .utf8) { print(jsonString) }
     guard let response = result.response else { return .failure(.invalidResponse) }
     if 200..<300 ~= response.statusCode {
       do {
