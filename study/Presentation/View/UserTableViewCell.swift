@@ -8,9 +8,11 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
 
 final class UserTableViewCell: UITableViewCell {
   static let id = "UserTableViewCell"
+  var disposeBag = DisposeBag()
   
   private let userImageView = {
     let imageView = UIImageView()
@@ -28,25 +30,46 @@ final class UserTableViewCell: UITableViewCell {
     return label
   }()
   
+  public let favoriteButton = {
+    let button = UIButton()
+    button.setImage(.init(systemName: "heart"), for: .normal)
+    button.setImage(.init(systemName: "heart.fill"), for: .selected)
+    button.tintColor = .systemRed
+    return button
+  }()
+  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    addSubview(userImageView)
-    addSubview(nameLable)
+    contentView.addSubview(userImageView)
+    contentView.addSubview(nameLable)
+    contentView.addSubview(favoriteButton)
     userImageView.snp.makeConstraints { make in
       make.leading.top.bottom.equalToSuperview().inset(20)
-      make.width.height.equalTo(80)
+      make.width.equalTo(80)
+      make.height.equalTo(80).priority(.high)
     }
     nameLable.snp.makeConstraints { make in
       make.top.equalTo(userImageView)
       make.leading.equalTo(userImageView.snp.trailing).offset(8)
       make.trailing.equalToSuperview().inset(20)
     }
+    favoriteButton.snp.makeConstraints { make in
+      make.width.height.equalTo(40)
+      make.centerY.equalToSuperview()
+      make.trailing.equalTo(-20)
+    }
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    disposeBag = DisposeBag()
   }
   
   func apply(cellData: UserListCellData) {
-    guard case let .user(user,isFavorite) = cellData else { return }
+    guard case let .user(user, isFavorite) = cellData else { return }
     userImageView.kf.setImage(with: URL(string: user.imageURL))
     nameLable.text = user.login
+    favoriteButton.isSelected = isFavorite
   }
   
   required init?(coder: NSCoder) {
