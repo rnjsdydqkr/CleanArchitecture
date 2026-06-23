@@ -10,7 +10,7 @@ import SnapKit
 import Kingfisher
 import RxSwift
 
-final class UserTableViewCell: UITableViewCell {
+final class UserTableViewCell: UITableViewCell, UserListCellProtocol {
   static let id = "UserTableViewCell"
   var disposeBag = DisposeBag()
   

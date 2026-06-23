@@ -28,7 +28,7 @@ public final class UserListViewModel: UserListViewModelProtocol {
   private let fetchUserList = BehaviorSubject<[UserListItem]>(value: [])
   private let allFavoriteUserList = BehaviorSubject<[UserListItem]>(value: []) // 즐겨찾기 표시를 위해, fetchUser 즐겨찾기 포함 여부를 알기위해 전체목록 필요
   private let favoriteUserList = BehaviorSubject<[UserListItem]>(value: []) // 목록에 보여줄 리스트
-  private var page: Int = 0
+  private var page: Int = 1
   
   public init(usecase: UserListUsecaseProtocol) {
     self.usecase = usecase
@@ -59,7 +59,7 @@ public final class UserListViewModel: UserListViewModelProtocol {
         self?.getFavoriteUsers(query: "")
         return
       }
-      page = 0
+      page = 1
       fetchUser(query: query, page: page)
       getFavoriteUsers(query: query)
     }.disposed(by: dispossBag)
@@ -127,7 +127,7 @@ public final class UserListViewModel: UserListViewModelProtocol {
       let result = await usecase.fetchUser(query: urlAllowedQuery, page: page)
       switch result {
       case .success(let users):
-        if page == 0 {
+        if page == 1 {
           // 첫번째 페이지
           fetchUserList.onNext(users.items)
         } else {
@@ -200,6 +200,17 @@ public enum TabButtonType: String {
 }
 
 public enum UserListCellData {
-  case user(user: UserListItem, isFavorite: Bool)
   case header(String)
+  case user(user: UserListItem, isFavorite: Bool)
+  
+  var id: String {
+    switch self {
+    case .header: HeaderTableViewCell.id
+    case .user: UserTableViewCell.id
+    }
+  }
+}
+
+protocol UserListCellProtocol {
+  func apply(cellData: UserListCellData)
 }
