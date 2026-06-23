@@ -68,6 +68,37 @@ final class UserListViewModelTests: XCTest {
     }
   }
   
+  // 즐겨찾기 결과 Cell data로 잘 나오는지 테스트
+  func testFavoriteUserCelldata() {
+    let userList = [
+      UserListItem(id: 1, login: "Ash", imageURL: ""),
+      UserListItem(id: 2, login: "Brown", imageURL: ""),
+      UserListItem(id: 3, login: "Brad", imageURL: "")
+    ]
+    mockUsecase.favoriteUserResult = .success(userList)
+    
+    let output = viewModel.transform(input: input)
+    tabButtonType.accept(.favorite)
+    
+    var result: [UserListCellData] = []
+    output.cellData.bind { cellData in
+      result = cellData
+    }.disposed(by: disposeBag)
+    
+    if case let .header(key) = result.first {
+      XCTAssertEqual(key, "A")
+    } else {
+      XCTFail("Cell data header cell 아님")
+    }
+    
+    if case .user(let userItem, let isFavorite) = result[1] {
+      XCTAssertEqual(userItem.login, "Ash")
+      XCTAssertTrue(isFavorite)
+    } else {
+      XCTFail("Cell data user cell 아님")
+    }
+  }
+  
   override func tearDown() {
     viewModel = nil
     mockUsecase = nil
