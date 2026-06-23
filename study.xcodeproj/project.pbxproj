@@ -11,6 +11,9 @@
 		9813526A2FE0D3AE0016840D /* UserCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981352692FE0D3A40016840D /* UserCoreData.swift */; };
 		9813526F2FE0D4170016840D /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9813526E2FE0D4130016840D /* UserRepository.swift */; };
 		986D9B7E2FEA4D9F00E11CB7 /* HeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986D9B7D2FEA4D9F00E11CB7 /* HeaderTableViewCell.swift */; };
+		986D9B802FEA64EB00E11CB7 /* UserListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986D9B7F2FEA64EB00E11CB7 /* UserListViewModelTests.swift */; };
+		986D9B822FEA667000E11CB7 /* MockUserUsecase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986D9B812FEA667000E11CB7 /* MockUserUsecase.swift */; };
+		986D9B842FEA70AC00E11CB7 /* UserUsecaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986D9B832FEA70AC00E11CB7 /* UserUsecaseTests.swift */; };
 		987929092FE8C90D0079B066 /* TabButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987929082FE8C90D0079B066 /* TabButtonStackView.swift */; };
 		9879290B2FE8C97A0079B066 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9879290A2FE8C97A0079B066 /* UserTableViewCell.swift */; };
 		9879290D2FE9088E0079B066 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9879290C2FE9088E0079B066 /* UserAPI.swift */; };
@@ -62,6 +65,9 @@
 		981352692FE0D3A40016840D /* UserCoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCoreData.swift; sourceTree = "<group>"; };
 		9813526E2FE0D4130016840D /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
 		986D9B7D2FEA4D9F00E11CB7 /* HeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTableViewCell.swift; sourceTree = "<group>"; };
+		986D9B7F2FEA64EB00E11CB7 /* UserListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewModelTests.swift; sourceTree = "<group>"; };
+		986D9B812FEA667000E11CB7 /* MockUserUsecase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserUsecase.swift; sourceTree = "<group>"; };
+		986D9B832FEA70AC00E11CB7 /* UserUsecaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUsecaseTests.swift; sourceTree = "<group>"; };
 		987929082FE8C90D0079B066 /* TabButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButtonStackView.swift; sourceTree = "<group>"; };
 		9879290A2FE8C97A0079B066 /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		9879290C2FE9088E0079B066 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
@@ -217,6 +223,8 @@
 			children = (
 				98B651F62FE0096A00321B94 /* studyTests.swift */,
 				98C869DA2FE261C700BA97A8 /* Mock */,
+				986D9B832FEA70AC00E11CB7 /* UserUsecaseTests.swift */,
+				986D9B7F2FEA64EB00E11CB7 /* UserListViewModelTests.swift */,
 			);
 			path = studyTests;
 			sourceTree = "<group>";
@@ -270,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				98C869D92FE261C700BA97A8 /* MockUserRepository.swift */,
+				986D9B812FEA667000E11CB7 /* MockUserUsecase.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -467,7 +476,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				986D9B802FEA64EB00E11CB7 /* UserListViewModelTests.swift in Sources */,
+				986D9B842FEA70AC00E11CB7 /* UserUsecaseTests.swift in Sources */,
 				98C869DB2FE261C700BA97A8 /* MockUserRepository.swift in Sources */,
+				986D9B822FEA667000E11CB7 /* MockUserUsecase.swift in Sources */,
 				98B651F82FE0096A00321B94 /* studyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

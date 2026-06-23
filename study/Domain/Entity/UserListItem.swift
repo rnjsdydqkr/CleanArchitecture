@@ -12,6 +12,12 @@ public struct UserListResult: Decodable {
   let incompleteResults: Bool
   let items: [UserListItem]
   
+  init(totalCount: Int, incompleteResults: Bool, items: [UserListItem]) {
+    self.totalCount = totalCount
+    self.incompleteResults = incompleteResults
+    self.items = items
+  }
+  
   enum CodingKeys: String, CodingKey {
     case totalCount = "total_count"
     case incompleteResults = "incomplete_results"
