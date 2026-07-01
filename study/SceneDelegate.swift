@@ -19,15 +19,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
     guard let windowScene = (scene as? UIWindowScene), let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
     window = UIWindow(windowScene: windowScene)
-    
+
     let coredata = UserCoreData(viewContext: appDelegate.persistentContainer.viewContext)
     let network = UserNetwork(manager: NetworkManager(session: UserSession()))
+    
+    // UserList (RxSwift 기반)
     let userRP = UserRepository(coreData: coredata, network: network)
     let userUC = UserListUsecase(repository: userRP)
     let userVM = UserListViewModel(usecase: userUC)
     let userVC = UserListViewController(viewModel: userVM)
+    userVC.tabBarItem = UITabBarItem(title: "유저", image: UIImage(systemName: "person.2.fill"), tag: 0)
     let userNC = UINavigationController(rootViewController: userVC)
-    window?.rootViewController = userVC
+    // SignUp (Combine 기반)
+    let signUpRP = SignUpRepository()
+    let signUpUC = SignUpUsecase(repository: signUpRP)
+    let signUpVM = SignUpViewModel(usecase: signUpUC)
+    let signUpVC = SignUpViewController(viewModel: signUpVM)
+    signUpVC.tabBarItem = UITabBarItem(title: "회원가입", image: UIImage(systemName: "person.badge.plus"), tag: 1)
+    let signUpNC = UINavigationController(rootViewController: signUpVC)
+
+    let tabBarController = UITabBarController()
+    tabBarController.viewControllers = [userNC, signUpNC]
+
+    window?.rootViewController = tabBarController
     window?.makeKeyAndVisible()
   }
 
