@@ -122,9 +122,8 @@ public final class UserListViewModel: UserListViewModelProtocol {
   }
   
   private func fetchUser(query: String, page: Int) {
-    guard let urlAllowedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
     Task {
-      let result = await usecase.fetchUser(query: urlAllowedQuery, page: page)
+      let result = await usecase.fetchUser(query: query, page: page)
       switch result {
       case .success(let users):
         if page == 1 {
@@ -152,9 +151,9 @@ public final class UserListViewModel: UserListViewModelProtocol {
         // 전체 리스트
         favoriteUserList.onNext(users)
       } else {
-        // 검색했을 때 필터링
+        // 검색했을 때 필터링 (대소문자 구분 없이 비교)
         let filteredUsers = users.filter { user in
-          user.login.contains(query.lowercased())
+          user.login.localizedCaseInsensitiveContains(query)
         }
         favoriteUserList.onNext(filteredUsers)
       }
