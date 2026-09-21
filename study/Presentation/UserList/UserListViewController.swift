@@ -79,12 +79,14 @@ class UserListViewController: UIViewController {
   }
   
   private func bindView() {
-    tableView.rx.prefetchRows.bind { [weak self] indexPath in
-      // 총 리스트 갯수 -1
-      // 현재 인덱스
-      guard let rows = self?.tableView.numberOfRows(inSection: 0), let itemIndex = indexPath.first?.item else { return }
-      if itemIndex >= rows - 1 {
-        self?.fetchMore.accept(())
+    tableView.rx.prefetchRows.bind { [weak self] indexPaths in
+      guard let self else { return }
+      // prefetchRows 는 IndexPath 를 배열로 준다.
+      // first 만 보면 빠르게 스크롤할 때 배열에 마지막 행이 들어 있어도 놓친다.
+      guard let farthestItem = indexPaths.map(\.item).max() else { return }
+      let rows = tableView.numberOfRows(inSection: 0)
+      if farthestItem >= rows - 1 {
+        fetchMore.accept(())
       }
     }.disposed(by: disposeBag)
   }

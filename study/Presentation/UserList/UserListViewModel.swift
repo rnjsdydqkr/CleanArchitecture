@@ -29,7 +29,10 @@ public final class UserListViewModel: UserListViewModelProtocol {
   private let allFavoriteUserList = BehaviorSubject<[UserListItem]>(value: []) // 즐겨찾기 표시를 위해, fetchUser 즐겨찾기 포함 여부를 알기위해 전체목록 필요
   private let favoriteUserList = BehaviorSubject<[UserListItem]>(value: []) // 목록에 보여줄 리스트
   private var page: Int = 1
-  
+  private var isLoading = false // 요청 중일 때 중복 요청을 막기 위한 플래그
+  private var totalCount = 0 // 서버가 알려준 전체 검색 결과 수. 끝에 도달했는지 판단에 사용
+  private static let searchResultLimit = 1000
+
   public init(usecase: UserListUsecaseProtocol) {
     self.usecase = usecase
   }
@@ -53,10 +56,14 @@ public final class UserListViewModel: UserListViewModelProtocol {
   
   public func transform(input: Input) -> Output {
     input.query.bind { [weak self] query in // 유저가 텍스트 필드에 입력
-      //TODO: 상황에 맞춰서 user fetch and get favorite users
-      guard let self, validateQuery(query: query) else {
-        //FIXME: 빈 값일 경우 fetchUser는 처리 안해줘도 되나?
-        self?.getFavoriteUsers(query: "")
+      guard let self else { return }
+      guard validateQuery(query: query) else {
+        // 검색어를 지우면 API 목록도 함께 비우고 페이징 상태를 초기화한다.
+        // 비우지 않으면 검색창을 지워도 이전 검색 결과가 화면에 그대로 남는다.
+        page = 1
+        totalCount = 0
+        fetchUserList.onNext([])
+        getFavoriteUsers(query: "")
         return
       }
       page = 1
@@ -81,10 +88,10 @@ public final class UserListViewModel: UserListViewModelProtocol {
     }.disposed(by: dispossBag)
     
     input.fetchMore
-      .withLatestFrom(input.query)
-      .bind { [weak self] query in
-      //TODO: 다음 페이지 검색
-        guard let self else { return }
+      .withLatestFrom(Observable.combineLatest(input.query, input.tabButtonTypes))
+      .bind { [weak self] query, tabButtonType in
+        // 다음 페이지 검색
+        guard let self, canFetchMore(query: query, tabButtonType: tabButtonType) else { return }
         page += 1
         fetchUser(query: query, page: page)
     }.disposed(by: dispossBag)
@@ -122,10 +129,13 @@ public final class UserListViewModel: UserListViewModelProtocol {
   }
   
   private func fetchUser(query: String, page: Int) {
+    isLoading = true
     Task {
+      defer { isLoading = false }
       let result = await usecase.fetchUser(query: query, page: page)
       switch result {
       case .success(let users):
+        totalCount = users.totalCount
         if page == 1 {
           // 첫번째 페이지
           fetchUserList.onNext(users.items)
@@ -190,7 +200,15 @@ public final class UserListViewModel: UserListViewModelProtocol {
       return true
     }
   }
-  
+
+  private func canFetchMore(query: String, tabButtonType: TabButtonType) -> Bool {
+    guard tabButtonType == .api else { return false }
+    guard validateQuery(query: query) else { return false }
+    guard !isLoading else { return false }
+    let loadedCount = (try? fetchUserList.value())?.count ?? 0
+    return loadedCount < min(totalCount, Self.searchResultLimit)
+  }
+
 }
 
 public enum TabButtonType: String {
