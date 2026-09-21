@@ -9,11 +9,21 @@ import Foundation
 @testable import study
 
 public class MockUserUsecase: UserListUsecaseProtocol {
+  // MARK: - Stub: 테스트가 지정한 값을 그대로 돌려준다
   public var fetchUserResult: Result<UserListResult, NetworkError>?
   public var favoriteUserResult: Result<[UserListItem], CoreDataError>?
-  
+
+  // MARK: - Spy: "어떤 인자로 불렸는지"를 기록한다
+  public private(set) var receivedQueries: [String] = []
+  public private(set) var receivedPages: [Int] = []
+  /// fetchUser 는 Task 안에서 비동기로 불리므로, 테스트가 호출 시점을 붙잡을 수 있도록 훅을 둔다
+  public var onFetchUser: ((String, Int) -> Void)?
+
   public func fetchUser(query: String, page: Int) async -> Result<study.UserListResult, study.NetworkError> {
-    fetchUserResult ?? .failure(.dataNil)
+    receivedQueries.append(query)
+    receivedPages.append(page)
+    onFetchUser?(query, page)
+    return fetchUserResult ?? .failure(.dataNil)
   }
   
   public func getFavoriteUsers() -> Result<[study.UserListItem], study.CoreDataError> {
