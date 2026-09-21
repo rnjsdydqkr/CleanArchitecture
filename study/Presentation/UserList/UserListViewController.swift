@@ -71,10 +71,10 @@ class UserListViewController: UIViewController {
       return cell
     }.disposed(by: disposeBag)
     
-    output.error.bind { errorMessage in
+    output.error.bind { [weak self] errorMessage in
       let alert = UIAlertController(title: "에러", message: errorMessage, preferredStyle: .alert)
       alert.addAction(.init(title: "확인", style: .default))
-      self.present(alert, animated: true)
+      self?.present(alert, animated: true)
     }.disposed(by: disposeBag)
   }
   
