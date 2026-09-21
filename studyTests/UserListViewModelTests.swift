@@ -182,6 +182,81 @@ final class UserListViewModelTests: XCTestCase {
     XCTAssertEqual(logins, ["Ash"], "대문자로 검색해도 login 'Ash' 가 매칭되어야 한다")
   }
 
+  // MARK: - 페이지네이션 가드
+  //
+  // 여기서는 "요청이 일어나지 않아야 한다"를 검증해야 한다.
+  // expectation.isInverted = true 로 두면 채워지는 순간 테스트가 실패하므로,
+  // 가드가 잘못 뚫렸을 때 정확히 잡아낼 수 있다.
+  // (Task 가 늦게 호출할 수도 있으므로 짧게 기다려 줄 시간도 필요하다)
+
+  /// 첫 페이지를 받아 놓은 상태까지 진행시키는 공통 준비 단계
+  private func loadFirstPage(totalCount: Int, itemCount: Int) {
+    let items = (1...itemCount).map {
+      UserListItem(id: $0, login: "user\($0)", imageURL: "")
+    }
+    mockUsecase.fetchUserResult = .success(
+      UserListResult(totalCount: totalCount, incompleteResults: false, items: items)
+    )
+    mockUsecase.favoriteUserResult = .success([])
+
+    let firstPage = expectation(description: "첫 페이지 요청 완료")
+    mockUsecase.onFetchUser = { _, _ in firstPage.fulfill() }
+
+    _ = viewModel.transform(input: input)
+    query.accept("user")
+    wait(for: [firstPage], timeout: 1.0)
+  }
+
+  // Favorite 탭은 로컬 목록이라 페이징 대상이 아니다
+  func testFetchMoreIsIgnoredOnFavoriteTab() {
+    // given: 아직 받을 게 남아 있는 상태(전체 100건 중 1건만 로드)
+    loadFirstPage(totalCount: 100, itemCount: 1)
+
+    // when
+    let noMoreCall = expectation(description: "Favorite 탭에서는 추가 요청이 없어야 한다")
+    noMoreCall.isInverted = true
+    mockUsecase.onFetchUser = { _, _ in noMoreCall.fulfill() }
+
+    tabButtonType.accept(.favorite)
+    fetchMore.accept(())
+
+    // then
+    wait(for: [noMoreCall], timeout: 0.3)
+  }
+
+  // 빈 쿼리로 요청하면 GitHub 가 422 를 응답한다
+  func testFetchMoreIsIgnoredWhenQueryIsEmpty() {
+    // given: query 는 초기값 "" 그대로 둔다
+    mockUsecase.favoriteUserResult = .success([])
+
+    let noCall = expectation(description: "빈 쿼리에서는 요청이 없어야 한다")
+    noCall.isInverted = true
+    mockUsecase.onFetchUser = { _, _ in noCall.fulfill() }
+
+    // when
+    _ = viewModel.transform(input: input)
+    fetchMore.accept(())
+
+    // then
+    wait(for: [noCall], timeout: 0.3)
+  }
+
+  // totalCount 만큼 다 받았으면 더 요청하지 않는다
+  func testFetchMoreStopsWhenAllResultsAreLoaded() {
+    // given: 전체가 1건이고 그 1건을 이미 받은 상태
+    loadFirstPage(totalCount: 1, itemCount: 1)
+
+    // when
+    let noMoreCall = expectation(description: "끝에 도달하면 추가 요청이 없어야 한다")
+    noMoreCall.isInverted = true
+    mockUsecase.onFetchUser = { _, _ in noMoreCall.fulfill() }
+
+    fetchMore.accept(())
+
+    // then
+    wait(for: [noMoreCall], timeout: 0.3)
+  }
+
   override func tearDown() {
     viewModel = nil
     mockUsecase = nil
