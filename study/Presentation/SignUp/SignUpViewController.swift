@@ -10,7 +10,10 @@ import SnapKit
 import Combine
 
 final class SignUpViewController: UIViewController {
-  private let viewModel: SignUpViewModel
+  private let viewModel: SignUpViewModelProtocol
+  private let emailInput = CurrentValueSubject<String, Never>("") // 텍스트필드는 항상 현재값을 가진다
+  private let passwordInput = CurrentValueSubject<String, Never>("")
+  private let submitTapped = PassthroughSubject<Void, Never>() // 탭은 현재값이 없는 순간 이벤트
   private var cancellables = Set<AnyCancellable>()
 
   private let emailTextField: UITextField = {
@@ -55,7 +58,7 @@ final class SignUpViewController: UIViewController {
     return button
   }()
 
-  init(viewModel: SignUpViewModel) {
+  init(viewModel: SignUpViewModelProtocol) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -69,8 +72,8 @@ final class SignUpViewController: UIViewController {
     view.backgroundColor = .white
     title = "회원가입"
     setUI()
-    bindInput()
-    bindOutput()
+    bindView()
+    bindViewModel()
   }
 
   private func setUI() {
@@ -107,51 +110,52 @@ final class SignUpViewController: UIViewController {
     }
   }
 
-  private func bindInput() {
+  private func bindView() {
     // UITextField 는 기본 Combine publisher 가 없어 NotificationCenter 로 텍스트 변화를 구독
     NotificationCenter.default
       .publisher(for: UITextField.textDidChangeNotification, object: emailTextField)
       .compactMap { ($0.object as? UITextField)?.text }
-      .assign(to: \.email, on: viewModel)
+      .sink { [weak self] text in self?.emailInput.send(text) }
       .store(in: &cancellables)
 
     NotificationCenter.default
       .publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
       .compactMap { ($0.object as? UITextField)?.text }
-      .assign(to: \.password, on: viewModel)
+      .sink { [weak self] text in self?.passwordInput.send(text) }
       .store(in: &cancellables)
 
     submitButton.addAction(UIAction { [weak self] _ in
-      self?.viewModel.submit()
+      self?.submitTapped.send(())
     }, for: .touchUpInside)
   }
 
-  private func bindOutput() {
-    viewModel.$emailValidation
-      .receive(on: DispatchQueue.main)
+  private func bindViewModel() {
+    let output = viewModel.transform(input: SignUpViewModel.Input(
+      email: emailInput.eraseToAnyPublisher(),
+      password: passwordInput.eraseToAnyPublisher(),
+      submit: submitTapped.eraseToAnyPublisher()
+    ))
+
+    output.emailValidation
       .sink { [weak self] state in
         self?.apply(state: state, to: self?.emailValidationLabel)
       }
       .store(in: &cancellables)
 
-    viewModel.$passwordValidation
-      .receive(on: DispatchQueue.main)
+    output.passwordValidation
       .sink { [weak self] state in
         self?.apply(state: state, to: self?.passwordValidationLabel)
       }
       .store(in: &cancellables)
 
-    viewModel.$isSubmitEnabled
-      .receive(on: DispatchQueue.main)
+    output.isSubmitEnabled
       .sink { [weak self] enabled in
         self?.submitButton.isEnabled = enabled
         self?.submitButton.backgroundColor = enabled ? .systemBlue : .systemGray4
       }
       .store(in: &cancellables)
 
-    viewModel.$submitResult
-      .compactMap { $0 }
-      .receive(on: DispatchQueue.main)
+    output.submitResult
       .sink { [weak self] message in
         let alert = UIAlertController(title: "완료", message: message, preferredStyle: .alert)
         alert.addAction(.init(title: "확인", style: .default))
