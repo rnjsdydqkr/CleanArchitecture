@@ -38,7 +38,24 @@ final class UserUsecaseTests: XCTestCase {
     XCTAssertEqual(result[4].isFavorite, true)
     XCTAssertEqual(result[5].isFavorite, true)
   }
-  
+
+  // 같은 유저라도 아바타 URL 은 언제든 바뀔 수 있다.
+  // UserListItem 의 Hashable 은 id + login + imageURL 전부로 합성되므로
+  // Set 포함 여부로 판정하면 "같은 사람"을 다른 사람으로 취급하게 된다.
+  func testCheckFavoriteStateMatchesByIdEvenWhenImageURLChanged() {
+    let fetchUsers = [
+      UserListItem(id: 1, login: "octocat", imageURL: "https://avatars.githubusercontent.com/u/1?v=5")
+    ]
+    // CoreData 에는 예전 아바타 URL(v=4)로 저장되어 있는 상황
+    let favoriteUsers = [
+      UserListItem(id: 1, login: "octocat", imageURL: "https://avatars.githubusercontent.com/u/1?v=4")
+    ]
+
+    let result = usecase.checkFavoriteState(fetchUsers: fetchUsers, favoriteUsers: favoriteUsers)
+
+    XCTAssertTrue(result[0].isFavorite, "아바타 URL 이 바뀌어도 id 가 같으면 즐겨찾기여야 한다")
+  }
+
   func testConvertListToDictionary() {
     let favoriteUsers = [
       UserListItem(id: 1, login: "user1", imageURL: ""),

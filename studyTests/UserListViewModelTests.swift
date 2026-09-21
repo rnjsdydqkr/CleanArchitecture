@@ -189,7 +189,7 @@ final class UserListViewModelTests: XCTestCase {
   // 가드가 잘못 뚫렸을 때 정확히 잡아낼 수 있다.
   // (Task 가 늦게 호출할 수도 있으므로 짧게 기다려 줄 시간도 필요하다)
 
-  /// 첫 페이지를 받아 놓은 상태까지 진행시키는 공통 준비 단계
+  /// 첫 페이지를 받아 "상태에 반영까지 끝난" 지점으로 진행시키는 공통 준비 단계
   private func loadFirstPage(totalCount: Int, itemCount: Int) {
     let items = (1...itemCount).map {
       UserListItem(id: $0, login: "user\($0)", imageURL: "")
@@ -199,12 +199,37 @@ final class UserListViewModelTests: XCTestCase {
     )
     mockUsecase.favoriteUserResult = .success([])
 
-    let firstPage = expectation(description: "첫 페이지 요청 완료")
-    mockUsecase.onFetchUser = { _, _ in firstPage.fulfill() }
+    let output = viewModel.transform(input: input)
 
-    _ = viewModel.transform(input: input)
+    // Spy 훅(onFetchUser)으로 기다리면 "호출된 순간"에 풀린다.
+    // 그런데 totalCount 저장과 isLoading 해제는 그 "이후"라서,
+    // 아직 totalCount 가 0 인 상태로 검증에 들어갈 수 있다.
+    // cellData 방출을 기다리면 성공 분기가 끝난 시점이 보장된다.
+    let loaded = expectation(description: "첫 페이지가 상태에 반영됨")
+    output.cellData
+      .filter { !$0.isEmpty }
+      .take(1)
+      .subscribe(onNext: { _ in loaded.fulfill() })
+      .disposed(by: disposeBag)
+
     query.accept("user")
-    wait(for: [firstPage], timeout: 1.0)
+    wait(for: [loaded], timeout: 1.0)
+  }
+
+  // 조건이 맞으면 실제로 다음 페이지를 요청해야 한다.
+  // isInverted 테스트만 있으면 "가드가 전부 막아버려도" 통과하므로 반대 방향도 검증한다.
+  func testFetchMoreLoadsNextPage() {
+    // given: 전체 100건 중 1건만 로드된 상태
+    loadFirstPage(totalCount: 100, itemCount: 1)
+
+    // when
+    let secondPage = expectation(description: "두 번째 페이지를 요청한다")
+    mockUsecase.onFetchUser = { _, _ in secondPage.fulfill() }
+    fetchMore.accept(())
+    wait(for: [secondPage], timeout: 1.0)
+
+    // then
+    XCTAssertEqual(mockUsecase.receivedPages, [1, 2], "1페이지 다음은 2페이지여야 한다")
   }
 
   // Favorite 탭은 로컬 목록이라 페이징 대상이 아니다
