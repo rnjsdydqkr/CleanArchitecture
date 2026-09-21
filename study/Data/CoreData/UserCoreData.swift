@@ -34,14 +34,15 @@ public struct UserCoreData: UserCoreDataProtocol {
   }
   
   public func saveFavorite(user: UserListItem) -> Result<Bool, CoreDataError> {
-    guard let entity = NSEntityDescription.entity(forEntityName: "FavoriteUser", in: viewContext) else {
-      return .failure(.entityNotFound("FavoriteUser"))
-    }
-    let userObject = NSManagedObject(entity: entity, insertInto: viewContext)
-    userObject.setValue(user.id, forKey: "id")
-    userObject.setValue(user.login, forKey: "login")
-    userObject.setValue(user.imageURL, forKey: "imageURL")
+    let fetchRequest: NSFetchRequest<FavoriteUser> = FavoriteUser.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "id == %d", user.id)
+    fetchRequest.fetchLimit = 1
     do {
+      let favoriteUser = try viewContext.fetch(fetchRequest).first
+        ?? FavoriteUser(context: viewContext)
+      favoriteUser.id = Int64(user.id)
+      favoriteUser.login = user.login
+      favoriteUser.imageURL = user.imageURL
       try viewContext.save()
       return .success(true)
     } catch {
@@ -51,7 +52,7 @@ public struct UserCoreData: UserCoreDataProtocol {
   
   public func deleteFavoriteUser(userId: Int) -> Result<Bool, CoreDataError> {
     let fetchRequest: NSFetchRequest<FavoriteUser> = FavoriteUser.fetchRequest()
-    fetchRequest.predicate = NSPredicate(format: "id == \(userId)")
+    fetchRequest.predicate = NSPredicate(format: "id == %d", userId)
     do {
       let result = try viewContext.fetch(fetchRequest)
       result.forEach { favoriteUser in
