@@ -25,7 +25,7 @@ public class NetworkManager: NetworkManagerProtocol {
   }
   
   private func makeURL(apiRouter: APIProtocol) -> (URL?, HTTPHeaders, Parameters?, HTTPMethod, URLEncoding) {
-    return (URL(string: apiRouter.baseURL + apiRouter.url)!, apiRouter.header, apiRouter.parameter?.dictionary, apiRouter.method, apiRouter.urlEncoding)
+    return (URL(string: apiRouter.baseURL + apiRouter.url), apiRouter.header, apiRouter.parameter?.dictionary, apiRouter.method, apiRouter.urlEncoding)
   }
   
   func fetchData<T: Decodable>(url: String, method: HTTPMethod, parameter: Parameters?, encoding: ParameterEncoding) async -> Result<T, NetworkError> {
